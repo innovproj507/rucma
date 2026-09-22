@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@source "../../app/Views";
+
+/* App unicamente en modo claro -- evita que el "modo oscuro forzado" de
+   algunos navegadores repinte de negro los fondos transparentes de las
+   plantillas de certificado en el editor. */
+html {
+  color-scheme: light only;
+}
+
+/* Paleta de marca PAMEL (tomada del logo: azul marino / celeste) */
+@theme {
+  --color-brand-50: #eef6fc;
+  --color-brand-100: #d9ecf8;
+  --color-brand-200: #b3d9f2;
+  --color-brand-300: #7dc0ea;
+  --color-brand-400: #4aa3de;
+  --color-brand-500: #2884c9;
+  --color-brand-600: #1c6bab;
+  --color-brand-700: #17548a;
+  --color-brand-800: #143f68;
+  --color-brand-900: #0f2c4a;
+  --color-brand-950: #0a1d33;
+}

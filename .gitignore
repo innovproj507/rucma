@@ -1,0 +1,22 @@
+/node_modules
+/vendor
+/.env
+/env
+/writable/cache/*
+/writable/debugbar/*
+/writable/logs/*
+/writable/session/*
+/writable/uploads/*
+!/writable/cache/index.html
+!/writable/logs/index.html
+!/writable/session/index.html
+!/writable/uploads/index.html
+
+# PHPUnit / build output
+/build
+/.phpunit.cache
+
+# IDE workspace files (each dev's local setup)
+*.code-workspace
+.vscode/
+.idea/

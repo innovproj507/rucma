@@ -1,0 +1,35 @@
+<?php
+
+// Palabras/frases reutilizadas en varios modulos (listados, filtros,
+// paginacion, modales) -- para no repetir la misma traduccion en cada
+// archivo de idioma por modulo.
+return [
+    'Search'         => 'Search',
+    'Status'         => 'Status',
+    'Show'           => 'Show',
+    'Active'         => 'Active',
+    'Inactive'       => 'Inactive',
+    'Closed'         => 'Closed',
+    'Edit'           => 'Edit',
+    'Delete'         => 'Delete',
+    'Cancel'         => 'Cancel',
+    'Save'           => 'Save',
+    'Previous'       => 'Previous',
+    'Next'           => 'Next',
+    'Showing'        => 'Showing',
+    'Of'             => 'of',
+    'Code'           => 'Code',
+    'Name'           => 'Name',
+    'Modality'       => 'Modality',
+    'Width'          => 'Width',
+    'Category'       => 'Category',
+    'All'            => 'All',
+    'NoResults'      => 'No results.',
+    'SelectPlaceholder' => '-- Select --',
+    'Saved'          => 'Saved',
+    'Error'          => 'Error',
+    'Confirm'        => 'Confirm',
+    'NoPermissionAction' => 'You do not have permission for this action.',
+    'NoPermissionSection' => 'You do not have permission to access that section.',
+    'Unauthorized'   => 'Unauthorized',
+];
