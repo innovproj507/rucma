@@ -45,6 +45,7 @@ function filterCursos(page) {
         htm = `<tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">${escapeHtml(I18N.common.noResults)}</td></tr>`;
       }
       result.datos.forEach(function (c) {
+        let nombreMostrado = window.IDIOMA_ACTUAL === 'en' ? (c.nombreIngles || c.nombre) : c.nombre;
         let estadoLabel = c.estado === 'A' ? I18N.common.active : (c.estado === 'I' ? I18N.common.inactive : I18N.common.closed);
         let estadoBadge;
         if (result.puedeEditar) {
@@ -59,7 +60,7 @@ function filterCursos(page) {
         }
         htm += `<tr>
                   <td class="px-4 py-3 font-medium text-gray-700">${escapeHtml(c.codigo)}</td>
-                  <td class="px-4 py-3">${escapeHtml(c.nombre)}</td>
+                  <td class="px-4 py-3">${escapeHtml(nombreMostrado)}</td>
                   <td class="px-4 py-3 text-gray-500">${escapeHtml(c.oficina)}</td>
                   <td class="px-4 py-3 text-gray-500">${escapeHtml(c.modalidad)}</td>
                   <td class="px-4 py-3">${estadoBadge}</td>

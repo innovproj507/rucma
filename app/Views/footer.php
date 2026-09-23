@@ -4,6 +4,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+// Idioma activo de la sesion (independiente del locale del navegador) -- lo
+// usan los .js que arman tablas para decidir que campo bilingue mostrar
+// (ej. nombre vs nombreIngles de un curso).
+window.IDIOMA_ACTUAL = <?= json_encode(service('language')->getLocale()) ?>;
+
 // Textos usados por los .js de cada modulo (SweetAlert, tablas armadas por
 // JS, etc.) -- panel bilingue: se arma en el idioma activo de la sesion.
 window.I18N = {
