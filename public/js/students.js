@@ -41,9 +41,9 @@ function filterStudents(page) {
                   <td class="px-4 py-3">${escapeHtml(value.email)}</td>
                   <td class="px-4 py-3">${escapeHtml(value.telefono)}</td>
                   <td class="px-4 py-3 text-right">
-                    <button type="button" onclick="editarEstudiante(${value.idEstudiante});" class="text-slate-500 hover:text-slate-900">
+                    ${result.puedeEditar ? `<button type="button" onclick="editarEstudiante(${value.idEstudiante});" class="text-slate-500 hover:text-slate-900">
                       <svg class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zM19.5 19.5H4.5"/></svg>
-                    </button>
+                    </button>` : ''}
                   </td>
                 </tr>`;
       });

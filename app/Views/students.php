@@ -1,11 +1,13 @@
 <div class="p-4 md:p-6">
   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <h1 class="text-xl font-semibold text-gray-800"><?php echo lang('Translate.Students'); ?></h1>
+    <?php if ($puedeCrear) { ?>
     <button type="button" onclick="nuevoEstudiante();"
             class="inline-flex items-center gap-2 rounded-md bg-brand-900 px-4 py-2 text-sm font-medium text-white hover:bg-brand-800">
       <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
       <?= lang('Students.AddStudent') ?>
     </button>
+    <?php } ?>
   </div>
 
   <div class="mt-4 flex flex-wrap items-end gap-3">
@@ -62,9 +64,11 @@
             <td class="px-4 py-3"><?= esc($value->email) ?></td>
             <td class="px-4 py-3"><?= esc($value->telefono) ?></td>
             <td class="px-4 py-3 text-right">
+              <?php if ($puedeEditar) { ?>
               <button type="button" onclick="editarEstudiante(<?= (int) $value->idEstudiante ?>);" class="text-brand-600 hover:text-brand-900">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zM19.5 19.5H4.5"/></svg>
               </button>
+              <?php } ?>
             </td>
           </tr>
           <?php } } ?>

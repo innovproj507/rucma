@@ -37,6 +37,8 @@ class Student extends BaseController
         $data['perPage'] = $perPage;
         $data['perPageOpciones'] = self::PER_PAGE_PERMITIDOS;
         $data['paises']  = $model->paises();
+        $data['puedeCrear']  = $this->tienePermiso('estudiantes.crear');
+        $data['puedeEditar'] = $this->tienePermiso('estudiantes.editar');
 
         return view('header', $data)
             . view('students')
@@ -66,6 +68,7 @@ class Student extends BaseController
             'pagina'  => $page,
             'perPage' => $perPage,
             'ultimaPagina' => max(1, (int) ceil($total / $perPage)),
+            'puedeEditar' => $this->tienePermiso('estudiantes.editar'),
         ]);
     }
     //----------------------------------------------------------------------------------------------

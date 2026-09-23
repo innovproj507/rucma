@@ -62,6 +62,7 @@ class Curso extends BaseController
         $data['pagina']      = $page;
         $data['puedeEliminar'] = $this->tienePermiso('cursos.eliminar');
         $data['puedeEditar'] = $this->tienePermiso('cursos.editar');
+        $data['puedeCrear'] = $this->tienePermiso('cursos.crear');
         $data['perPage']     = $perPage;
         $data['perPageOpciones'] = self::PER_PAGE_PERMITIDOS;
         $data['modalidades'] = $model->modalidades();
