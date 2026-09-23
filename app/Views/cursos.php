@@ -90,10 +90,17 @@
             <td class="px-4 py-3 text-gray-500"><?= esc($c->oficina) ?></td>
             <td class="px-4 py-3 text-gray-500"><?= esc($c->modalidad) ?></td>
             <td class="px-4 py-3">
-              <?php if ($c->estado === 'A') { ?>
-              <span class="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700"><?= lang('Common.Active') ?></span>
+              <?php
+                $estadoLabel = $c->estado === 'A' ? lang('Common.Active') : ($c->estado === 'I' ? lang('Common.Inactive') : lang('Common.Closed'));
+              ?>
+              <?php if ($puedeEditar) { ?>
+              <button type="button" onclick="cambiarEstadoCurso(<?= (int) $c->idCurso ?>, <?= esc(json_encode($c->nombre), 'attr') ?>, <?= esc(json_encode($c->estado), 'attr') ?>);"
+                      title="<?= $c->estado === 'A' ? esc(lang('Cursos.DeactivateAction')) : esc(lang('Cursos.ActivateAction')) ?>"
+                      class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium shadow-sm transition hover:shadow <?= $c->estado === 'A' ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'border-gray-200 bg-gray-100 text-gray-600 hover:bg-gray-200' ?>">
+                <?= $estadoLabel ?>
+              </button>
               <?php } else { ?>
-              <span class="inline-flex rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600"><?= esc($c->estado) ?></span>
+              <span class="inline-flex rounded-full <?= $c->estado === 'A' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600' ?> px-2 py-0.5 text-xs font-medium"><?= $estadoLabel ?></span>
               <?php } ?>
             </td>
             <td class="px-4 py-3 text-right">
@@ -235,4 +242,5 @@
 <script>
 window.CSRF_TOKEN_NAME = '<?= csrf_token() ?>';
 window.CURSOS_PAGINA_ACTUAL = <?= (int) $pagina ?>;
+window.PUEDE_EDITAR_CURSO = <?= $puedeEditar ? 'true' : 'false' ?>;
 </script>

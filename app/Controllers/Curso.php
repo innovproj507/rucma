@@ -61,6 +61,7 @@ class Curso extends BaseController
         $data['idOficinaFiltro'] = $filtros['idOficina'];
         $data['pagina']      = $page;
         $data['puedeEliminar'] = $this->tienePermiso('cursos.eliminar');
+        $data['puedeEditar'] = $this->tienePermiso('cursos.editar');
         $data['perPage']     = $perPage;
         $data['perPageOpciones'] = self::PER_PAGE_PERMITIDOS;
         $data['modalidades'] = $model->modalidades();
@@ -91,6 +92,7 @@ class Curso extends BaseController
             'perPage'  => $perPage,
             'ultimaPagina' => max(1, (int) ceil($total / $perPage)),
             'puedeEliminar' => $this->tienePermiso('cursos.eliminar'),
+            'puedeEditar' => $this->tienePermiso('cursos.editar'),
         ]);
     }
     //----------------------------------------------------------------------------------------------
@@ -195,5 +197,31 @@ class Curso extends BaseController
         $model->delete($id);
 
         return $this->response->setJSON(['ok' => true, 'csrf' => csrf_hash()]);
+    }
+    //----------------------------------------------------------------------------------------------
+    // Alterna Active <-> Inactive desde el listado, sin abrir el modal de edicion.
+    // Un curso Closed tambien vuelve a Active con esto (reabrirlo); para pasarlo
+    // a Closed hay que hacerlo desde el modal, ya que es un estado mas deliberado.
+    public function cambiarEstado($id)
+    {
+        if ($resp = $this->exigirPermiso('cursos.editar')) {
+            return $resp;
+        }
+
+        $id = (int) $id;
+        $model = new CursoModel();
+        $curso = $model->find($id);
+        if (!$curso) {
+            return $this->response->setStatusCode(404)->setJSON(['ok' => false, 'error' => lang('Cursos.CourseNotFound'), 'csrf' => csrf_hash()]);
+        }
+
+        if (!session()->get('isAdmin') && (int) $curso->idOficina !== (int) session()->get('idOficina')) {
+            return $this->response->setStatusCode(403)->setJSON(['ok' => false, 'error' => lang('Common.NoPermissionAction'), 'csrf' => csrf_hash()]);
+        }
+
+        $nuevoEstado = $curso->estado === 'A' ? 'I' : 'A';
+        $model->update($id, ['estado' => $nuevoEstado]);
+
+        return $this->response->setJSON(['ok' => true, 'estado' => $nuevoEstado, 'csrf' => csrf_hash()]);
     }
 }

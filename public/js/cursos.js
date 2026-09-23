@@ -45,9 +45,18 @@ function filterCursos(page) {
         htm = `<tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">${escapeHtml(I18N.common.noResults)}</td></tr>`;
       }
       result.datos.forEach(function (c) {
-        let estadoBadge = c.estado === 'A'
-          ? `<span class="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">${escapeHtml(I18N.common.active)}</span>`
-          : `<span class="inline-flex rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">${escapeHtml(c.estado)}</span>`;
+        let estadoLabel = c.estado === 'A' ? I18N.common.active : (c.estado === 'I' ? I18N.common.inactive : I18N.common.closed);
+        let estadoBadge;
+        if (result.puedeEditar) {
+          let clase = c.estado === 'A'
+            ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+            : 'border-gray-200 bg-gray-100 text-gray-600 hover:bg-gray-200';
+          let titulo = c.estado === 'A' ? I18N.cursos.deactivateAction : I18N.cursos.activateAction;
+          estadoBadge = `<button type="button" onclick="cambiarEstadoCurso(${c.idCurso}, ${escapeHtml(JSON.stringify(c.nombre ?? ''))}, ${escapeHtml(JSON.stringify(c.estado ?? ''))});" title="${escapeHtml(titulo)}" class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium shadow-sm transition hover:shadow ${clase}">${escapeHtml(estadoLabel)}</button>`;
+        } else {
+          let clase = c.estado === 'A' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600';
+          estadoBadge = `<span class="inline-flex rounded-full ${clase} px-2 py-0.5 text-xs font-medium">${escapeHtml(estadoLabel)}</span>`;
+        }
         htm += `<tr>
                   <td class="px-4 py-3 font-medium text-gray-700">${escapeHtml(c.codigo)}</td>
                   <td class="px-4 py-3">${escapeHtml(c.nombre)}</td>
@@ -70,6 +79,39 @@ function filterCursos(page) {
       document.getElementById('btnPagAnterior').disabled = result.pagina <= 1;
       document.getElementById('btnPagSiguiente').disabled = result.pagina >= result.ultimaPagina;
     });
+}
+
+//-------------------------------------------------------------------------------------------------------
+function cambiarEstadoCurso(id, nombre, estadoActual) {
+  let esActivar = estadoActual !== 'A';
+  Swal.fire({
+    icon: 'warning',
+    title: esActivar ? I18N.cursos.activateConfirmTitle : I18N.cursos.deactivateConfirmTitle,
+    text: `${esActivar ? I18N.cursos.activateConfirmMsg : I18N.cursos.deactivateConfirmMsg} "${nombre}"? ${esActivar ? I18N.cursos.activateConfirmSuffix : I18N.cursos.deactivateConfirmSuffix}`,
+    showCancelButton: true,
+    confirmButtonText: esActivar ? I18N.cursos.activateAction : I18N.cursos.deactivateAction,
+    cancelButtonText: I18N.common.cancel,
+    confirmButtonColor: '#d97706',
+  }).then((result) => {
+    if (!result.isConfirmed) return;
+
+    let csrfInput = document.querySelector(`input[name="${window.CSRF_TOKEN_NAME}"]`);
+    let formData = new FormData();
+    formData.append(window.CSRF_TOKEN_NAME, csrfInput.value);
+
+    fetch(`/cursos/${id}/estado`, { method: 'POST', body: formData })
+      .then((response) => response.json().then((data) => ({ status: response.status, body: data })))
+      .then(({ status, body }) => {
+        if (body.csrf) {
+          csrfInput.value = body.csrf;
+        }
+        if (status === 200 && body.ok) {
+          Swal.fire({ icon: 'success', title: I18N.common.saved, text: esActivar ? I18N.cursos.courseActivated : I18N.cursos.courseDeactivated, confirmButtonColor: '#17548a' }).then(() => filterCursos());
+        } else {
+          Swal.fire({ icon: 'error', title: I18N.common.error, text: body.error ?? I18N.cursos.changeStatusError, confirmButtonColor: '#f90f00' });
+        }
+      });
+  });
 }
 
 //-------------------------------------------------------------------------------------------------------

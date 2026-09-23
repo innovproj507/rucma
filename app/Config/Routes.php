@@ -51,6 +51,7 @@ $routes->get('cursos/filter', 'Curso::filter');
 $routes->get('cursos/get/(:num)', 'Curso::get/$1');
 $routes->post('cursos/save', 'Curso::save');
 $routes->post('cursos/eliminar/(:num)', 'Curso::eliminar/$1');
+$routes->post('cursos/(:num)/estado', 'Curso::cambiarEstado/$1');
 
 $routes->get('plantillas', 'Plantilla::index');
 $routes->get('plantillas/get/(:num)', 'Plantilla::get/$1');
