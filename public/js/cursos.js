@@ -20,6 +20,7 @@ function resetFormCurso() {
 //-------------------------------------------------------------------------------------------------------
 function filterCursos(page) {
   let pagina = page || window.CURSOS_PAGINA_ACTUAL || 1;
+  let idOficinaFiltro = document.getElementById('idOficinaFiltro');
   let params = new URLSearchParams({
     busqueda: document.getElementById('busqueda').value,
     idModalidad: document.getElementById('idModalidadFiltro').value,
@@ -28,6 +29,9 @@ function filterCursos(page) {
     perPage: document.getElementById('perPageFiltro').value,
     page: pagina,
   });
+  if (idOficinaFiltro) {
+    params.set('idOficina', idOficinaFiltro.value);
+  }
 
   fetch('/cursos/filter?' + params.toString(), {
     headers: { Accept: 'application/json' },

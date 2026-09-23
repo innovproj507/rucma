@@ -8,15 +8,23 @@ class Curso extends BaseController
 {
     private const PER_PAGE_PERMITIDOS = [5, 10, 25, 50, 100];
 
+    // Un usuario normal siempre queda restringido a su propia oficina. Un
+    // administrador filtra con el dropdown de esta misma pagina (independiente
+    // del selector del header) -- por defecto arranca con la oficina que tenga
+    // elegida en el header, pero puede cambiarla aqui sin afectar otras paginas.
     private function filtrosGet(): array
     {
         $get = $this->request->getGet();
+        $idOficina = session()->get('isAdmin')
+            ? ($get['idOficina'] ?? $this->oficinaEfectiva())
+            : (int) session()->get('idOficina');
+
         return [
             'busqueda'    => $get['busqueda'] ?? null,
             'idModalidad' => $get['idModalidad'] ?? null,
             'idCategoria' => $get['idCategoria'] ?? null,
             'estado'      => $get['estado'] ?? null,
-            'idOficina'   => $this->oficinaEfectiva(),
+            'idOficina'   => $idOficina,
         ];
     }
 
@@ -50,6 +58,7 @@ class Curso extends BaseController
         $data['datos']       = $model->listar($filtros, $page, $perPage);
         $data['total']       = $model->contar($filtros);
         $data['oficinas']    = $this->db()->table('tbl_oficina')->where('estado', 'A')->orderBy('nombre')->get()->getResult();
+        $data['idOficinaFiltro'] = $filtros['idOficina'];
         $data['pagina']      = $page;
         $data['puedeEliminar'] = $this->tienePermiso('cursos.eliminar');
         $data['perPage']     = $perPage;

@@ -44,6 +44,20 @@
         <option value="C"><?= lang('Common.Closed') ?></option>
       </select>
     </div>
+    <?php if (session()->get('isAdmin')) { ?>
+    <div>
+      <label class="mb-1 block text-xs font-medium text-gray-600"><?= lang('CertificatesList.Office') ?></label>
+      <select id="idOficinaFiltro" onchange="filterCursos(1);"
+              class="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+        <option value="" <?= empty($idOficinaFiltro) ? 'selected' : '' ?>><?= lang('Translate.AllOffices') ?></option>
+        <?php foreach ($oficinas as $o) { ?>
+        <option value="<?= (int) $o->idOficina ?>" <?= (int) ($idOficinaFiltro ?? 0) === (int) $o->idOficina ? 'selected' : '' ?>>
+          <?= esc($o->nombre . ' (' . $o->descripcion . ')') ?>
+        </option>
+        <?php } ?>
+      </select>
+    </div>
+    <?php } ?>
     <div>
       <label class="mb-1 block text-xs font-medium text-gray-600"><?= lang('Common.Show') ?></label>
       <select id="perPageFiltro" onchange="filterCursos(1);"
