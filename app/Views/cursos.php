@@ -88,7 +88,7 @@
           <tr>
             <td class="px-4 py-3 font-medium text-gray-700"><?= esc($c->codigo) ?></td>
             <td class="px-4 py-3"><?= esc($idiomaActualCursos === 'en' ? ($c->nombreIngles ?: $c->nombre) : $c->nombre) ?></td>
-            <td class="px-4 py-3 text-gray-500"><?= esc($c->oficina) ?></td>
+            <td class="px-4 py-3 text-gray-500"><?= esc($c->oficinaDescripcion ? $c->oficina . ' (' . $c->oficinaDescripcion . ')' : $c->oficina) ?></td>
             <td class="px-4 py-3 text-gray-500"><?= esc($c->modalidad) ?></td>
             <td class="px-4 py-3">
               <?php
