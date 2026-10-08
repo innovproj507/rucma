@@ -14,6 +14,16 @@
       <img src="<?=base_url();?>/img/logo2.png" class="mx-auto mb-4 h-24 w-24 object-contain" alt="RUCMA">
       <p class="mb-6 text-center text-lg font-semibold text-gray-800">Verificación de Certificado</p>
 
+      <form onsubmit="return irValidar(event)" class="mb-6">
+        <label for="codigoInput" class="mb-1 block text-sm font-medium text-gray-700">Código del certificado</label>
+        <div class="flex gap-2">
+          <input type="text" id="codigoInput" value="<?= esc($codigo ?? '') ?>" placeholder="Ej: PAM-PAN-PSSR-AC00307"
+                 class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+          <button type="submit" class="flex-shrink-0 rounded-md bg-brand-900 px-4 py-2 text-sm font-medium text-white hover:bg-brand-800">Verificar</button>
+        </div>
+      </form>
+
+      <?php if (($codigo ?? '') !== '') { ?>
       <?php if ($certificado) { ?>
         <?php $expirado = !empty($certificado->fechaExpiracion) && strtotime($certificado->fechaExpiracion) < time(); ?>
         <div class="mb-4 flex items-center gap-3 rounded-md <?= $expirado ? 'bg-amber-50 text-amber-800' : 'bg-emerald-50 text-emerald-800' ?> px-4 py-3 text-sm">
@@ -41,9 +51,20 @@
         </div>
         <p class="text-center font-mono text-sm text-gray-400"><?= esc($codigo) ?></p>
       <?php } ?>
+      <?php } ?>
 
       <a href="<?=base_url();?>" class="mt-6 block w-full rounded-lg bg-brand-900 px-4 py-3 text-center text-sm font-medium text-white hover:bg-brand-800">Volver al inicio</a>
     </div>
   </div>
+
+  <script>
+    function irValidar(e) {
+      e.preventDefault();
+      var v = document.getElementById('codigoInput').value.trim();
+      if (!v) return false;
+      window.location.href = '<?= rtrim(base_url('consult/validate'), '/') ?>/' + encodeURIComponent(v);
+      return false;
+    }
+  </script>
 </body>
 </html>

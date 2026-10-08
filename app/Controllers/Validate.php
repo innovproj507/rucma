@@ -11,6 +11,17 @@ use App\Models\CertificadoModel;
 // autentico y esta vigente.
 class Validate extends BaseController
 {
+    // Pantalla publica con el formulario para escribir el codigo a mano
+    // (sin pasar por el QR). GET /consult/validate, sin segmento de codigo.
+    public function index()
+    {
+        return view('validate_certificado', [
+            'title'       => 'Verificación de Certificado',
+            'codigo'      => null,
+            'certificado' => null,
+        ]);
+    }
+
     public function certificado(string $codigo)
     {
         $certificado = (new CertificadoModel())->validarPorCodigo($codigo);

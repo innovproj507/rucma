@@ -16,6 +16,7 @@ $routes->get('login', 'Login::index');
 $routes->post('auth', 'Login::auth');
 $routes->get('logout', 'Login::logout');
 
+$routes->get('consult/validate', 'Validate::index');
 $routes->get('consult/validate/(:any)', 'Validate::certificado/$1');
 
 $routes->get('dashboard', 'Dashboard::index');
