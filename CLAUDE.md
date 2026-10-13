@@ -21,8 +21,9 @@ shell's default `php` has already been switched to 8.2:
 "/c/laragon/bin/php/php-8.2.33-Win32-vs16-x64/php.exe" spark <command>
 ```
 
-- Run all tests: `composer test` (wraps `phpunit`) or `vendor/bin/phpunit`
-- Run a single test: `vendor/bin/phpunit --filter testMethodName path/to/TestFile.php`
+- Run all tests: `<php8.2> vendor/bin/phpunit` (`composer test` wraps the same
+  thing but picks up whatever `php` is in PATH; config is `phpunit.dist.xml`)
+- Run a single test: `<php8.2> vendor/bin/phpunit --filter testMethodName path/to/TestFile.php`
 - List routes: `spark routes`
 - Dev server: `spark serve` (app is normally served via Laragon vhost at `http://rucma2.test`, per `.env`)
 - Build Tailwind CSS once: `npm run build:css`
@@ -30,7 +31,7 @@ shell's default `php` has already been switched to 8.2:
   (source: `resources/css/input.css` → output: `public/css/tailwind.css`; views live under `app/Views`, which is the Tailwind `@source`)
 
 There are no app-specific PHPUnit tests yet — `tests/` only has the stock
-CodeIgniter examples (session/database smoke tests). There are also no
+CodeIgniter examples (`unit/HealthTest`, session/database smoke tests). There are also no
 CodeIgniter migrations (`app/Database/Migrations` is empty); the schema is
 managed via raw SQL dumps in the repo root (e.g. `rucma_DB (6).sql`,
 `fase1_maestras.sql`, `db_changes_for_production_*.sql`) rather than

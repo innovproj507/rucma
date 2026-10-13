@@ -124,7 +124,17 @@ if (!empty($textoLegal)) { $p = $mm($layout['legal']); ?>
       <td width="<?= $colDetalle ?>mm">Place: <strong><?= esc($certificado->lugarEntrega) ?></strong></td>
     </tr>
     <tr>
-      <td width="<?= $colDetalle ?>mm">Duration: <strong><?= esc($certificado->horasEmitidas) ?> hours</strong></td>
+      <?php
+        // 'duracion' es lo que se captura en el formulario ("Duration (hours)")
+        // y donde los certificados migrados del sistema anterior guardan las
+        // horas; 'horasEmitidas' (horas del curso por categoria) es el respaldo.
+        $horasCert = $certificado->duracion ?? null;
+        if ($horasCert === null || $horasCert === '') {
+            $horasCert = $certificado->horasEmitidas ?? null;
+        }
+        $horasCert = ($horasCert === null || $horasCert === '') ? '' : (string) ($horasCert + 0); // 20.0 -> "20", 7.5 -> "7.5"
+      ?>
+      <td width="<?= $colDetalle ?>mm">Duration: <strong><?= $horasCert !== '' ? esc($horasCert) . ' hours' : '' ?></strong></td>
       <td width="<?= $colDetalle ?>mm"></td>
     </tr>
   </table>
