@@ -33,4 +33,8 @@ return [
     'DeleteError'           => 'No se pudo eliminar el certificado.',
     'CertificateNotFound'   => 'Certificado no encontrado.',
     'MustCancelBeforeDelete' => 'Solo se pueden eliminar certificados cancelados. Cancélalo primero.',
+    'EditAction'            => 'Editar certificado',
+    'EditNote'              => 'El código, el curso, la categoría y el estudiante no se pueden cambiar aquí (el código es el que valida el QR impreso). Los datos del estudiante se corrigen en Estudiantes.',
+    'CertificateUpdated'    => 'El certificado se actualizó correctamente.',
+    'UpdateError'           => 'No se pudo actualizar el certificado.',
 ];

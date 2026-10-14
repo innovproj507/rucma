@@ -37,6 +37,8 @@ $routes->get('certificados/estudiante', 'Certificado::buscarEstudiante');
 $routes->post('certificados/guardar', 'Certificado::guardar');
 $routes->get('certificados/(:num)/ver', 'Certificado::pdf/$1/ver');
 $routes->get('certificados/(:num)/descargar', 'Certificado::pdf/$1/descargar');
+$routes->get('certificados/(:num)/datos', 'Certificado::datos/$1');
+$routes->post('certificados/(:num)/editar', 'Certificado::editar/$1');
 $routes->post('certificados/(:num)/cancelar', 'Certificado::cancelar/$1');
 $routes->post('certificados/(:num)/eliminar', 'Certificado::eliminar/$1');
 

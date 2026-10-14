@@ -90,6 +90,11 @@
                 <svg class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
               </a>
               <?php } ?>
+              <?php if (!empty($puedeEditar)) { ?>
+              <button type="button" onclick="editarCertificado(<?= (int) $c->idCertificado ?>);" class="ml-2 text-amber-600 hover:text-amber-800" title="<?= esc(lang('CertificatesList.EditAction')) ?>">
+                <svg class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
+              </button>
+              <?php } ?>
               <?php if (!empty($puedeEliminar)) { ?>
               <button type="button" onclick="eliminarCertificado(<?= (int) $c->idCertificado ?>, <?= esc(json_encode($c->codigo), 'attr') ?>);" class="ml-2 text-rose-600 hover:text-rose-800" title="<?= esc(lang('CertificatesList.DeleteAction')) ?>">
                 <svg class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
@@ -118,6 +123,72 @@
     </div>
   </div>
 </div>
+
+<?php if (!empty($puedeEditar)) { ?>
+<!-- Modal Editar Certificado -->
+<div id="modalCertificado" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/50" onclick="cerrarModalCertificado();"></div>
+  <div class="relative flex min-h-full items-center justify-center p-4">
+    <div class="w-full max-w-2xl rounded-lg bg-white shadow-xl">
+      <form id="formCertificado">
+        <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+          <h3 class="text-base font-semibold text-gray-800"><?= lang('CertificatesList.EditAction') ?> <span id="codigoModalCertificado" class="text-brand-700"></span></h3>
+          <button type="button" onclick="cerrarModalCertificado();" class="text-gray-400 hover:text-gray-600">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="max-h-[70vh] space-y-4 overflow-y-auto px-6 py-4">
+          <input type="hidden" id="editIdCertificado">
+          <p class="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-800"><?= lang('CertificatesList.EditNote') ?></p>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700"><?= lang('CertificadoForm.ModalityReq') ?></label>
+              <select id="editIdModalidad" name="idModalidad" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+                <option value=""><?= lang('Common.SelectPlaceholder') ?></option>
+                <?php foreach ($modalidades as $m) { ?>
+                <option value="<?= (int) $m->idModalidad ?>"><?= esc($m->descripcion) ?></option>
+                <?php } ?>
+              </select>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700"><?= lang('CertificadoForm.DeliveryPlace') ?></label>
+              <input type="text" id="editLugarEntrega" name="lugarEntrega" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700"><?= lang('CertificadoForm.DurationHours') ?></label>
+              <input type="number" min="0" step="1" id="editDuracion" name="duracion" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700"><?= lang('CertificadoForm.StartDateReq') ?></label>
+              <input type="date" id="editFechaInicio" name="fechaInicio" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700"><?= lang('CertificadoForm.EndDateReq') ?></label>
+              <input type="date" id="editFechaFinal" name="fechaFinal" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700"><?= lang('CertificadoForm.IssueDateReq') ?></label>
+              <input type="date" id="editFechaEmision" name="fechaEmision" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700"><?= lang('CertificadoForm.ExpirationDateReq') ?></label>
+              <input type="date" id="editFechaExpiracion" name="fechaExpiracion" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-3 border-t border-gray-200 px-6 py-4">
+          <button type="button" onclick="cerrarModalCertificado();" class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"><?= lang('Common.Cancel') ?></button>
+          <button type="button" onclick="guardarEdicionCertificado();" class="rounded-md bg-brand-900 px-4 py-2 text-sm font-medium text-white hover:bg-brand-800"><?= lang('Common.Save') ?></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php } ?>
 
 <?= csrf_field() ?>
 <script>

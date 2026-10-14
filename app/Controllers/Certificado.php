@@ -52,6 +52,8 @@ class Certificado extends BaseController
         $data['puedeVerPdf'] = $this->tienePermiso('certificados.ver_pdf');
         $data['puedeCancelar'] = $this->tienePermiso('certificados.cancelar');
         $data['puedeEliminar'] = $this->tienePermiso('certificados.eliminar');
+        $data['puedeEditar'] = $this->tienePermiso('certificados.editar');
+        $data['modalidades'] = (new CertificadoModel())->modalidades();
 
         return view('header', $data) . view('certificates') . view('footer');
     }
@@ -80,6 +82,7 @@ class Certificado extends BaseController
             'puedeVerPdf' => $this->tienePermiso('certificados.ver_pdf'),
             'puedeCancelar' => $this->tienePermiso('certificados.cancelar'),
             'puedeEliminar' => $this->tienePermiso('certificados.eliminar'),
+            'puedeEditar' => $this->tienePermiso('certificados.editar'),
         ]);
     }
 
@@ -232,6 +235,115 @@ class Certificado extends BaseController
                 'ok' => false, 'error' => $e->getMessage(), 'csrf' => csrf_hash(),
             ]);
         }
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Datos editables de un certificado ya emitido (para el modal de edicion
+    // del listado).
+    public function datos($id)
+    {
+        if ($resp = $this->exigirPermiso('certificados.editar')) {
+            return $resp;
+        }
+
+        $certificado = (new CertificadoModel())->find((int) $id);
+        if (!$certificado) {
+            return $this->response->setStatusCode(404)->setJSON(['ok' => false, 'error' => lang('CertificatesList.CertificateNotFound')]);
+        }
+
+        $idOficinaEfectiva = $this->oficinaEfectiva();
+        if ($idOficinaEfectiva !== null && (int) $certificado->idOficina !== $idOficinaEfectiva) {
+            return $this->response->setStatusCode(403)->setJSON(['ok' => false, 'error' => lang('Common.NoPermissionAction')]);
+        }
+
+        return $this->response->setJSON([
+            'ok'              => true,
+            'idCertificado'   => (int) $certificado->idCertificado,
+            'codigo'          => $certificado->codigo,
+            'idModalidad'     => $certificado->idModalidad,
+            'lugarEntrega'    => $certificado->lugarEntrega,
+            'duracion'        => $certificado->duracion,
+            'fechaInicio'     => $certificado->fechaInicio,
+            'fechaFinal'      => $certificado->fechaFinal,
+            'fechaEmision'    => $certificado->fechaEmision,
+            'fechaExpiracion' => $certificado->fechaExpiracion,
+        ]);
+    }
+    //----------------------------------------------------------------------------------------------
+    // Edita un certificado ya emitido. No se tocan codigo/curso/categoria/
+    // estudiante: el codigo es la base del hash que valida el QR impreso, y
+    // los datos del estudiante se editan desde Estudiantes. Cada campo que
+    // cambia queda en tbl_certificado_historial.
+    public function editar($id)
+    {
+        if ($resp = $this->exigirPermiso('certificados.editar')) {
+            return $resp;
+        }
+
+        $id = (int) $id;
+        $model = new CertificadoModel();
+        $certificado = $model->find($id);
+        if (!$certificado) {
+            return $this->response->setStatusCode(404)->setJSON(['ok' => false, 'error' => lang('CertificatesList.CertificateNotFound'), 'csrf' => csrf_hash()]);
+        }
+
+        $idOficinaEfectiva = $this->oficinaEfectiva();
+        if ($idOficinaEfectiva !== null && (int) $certificado->idOficina !== $idOficinaEfectiva) {
+            return $this->response->setStatusCode(403)->setJSON(['ok' => false, 'error' => lang('Common.NoPermissionAction'), 'csrf' => csrf_hash()]);
+        }
+
+        $post = $this->request->getPost();
+        foreach (['idModalidad', 'fechaInicio', 'fechaFinal', 'fechaEmision', 'fechaExpiracion'] as $campo) {
+            if (empty($post[$campo])) {
+                return $this->response->setStatusCode(422)->setJSON([
+                    'ok' => false, 'error' => sprintf(lang('CertificadoForm.FieldRequired'), $campo), 'csrf' => csrf_hash(),
+                ]);
+            }
+        }
+
+        $modalidad = $this->db()->table('tbl_modalidad')->where('idModalidad', (int) $post['idModalidad'])->get()->getRow();
+        if (!$modalidad) {
+            return $this->response->setStatusCode(422)->setJSON([
+                'ok' => false, 'error' => sprintf(lang('CertificadoForm.FieldRequired'), 'idModalidad'), 'csrf' => csrf_hash(),
+            ]);
+        }
+
+        $nuevos = [
+            'idModalidad'      => (int) $post['idModalidad'],
+            'modalidadEmitida' => $modalidad->descripcion,
+            'lugarEntrega'     => ($post['lugarEntrega'] ?? '') !== '' ? $post['lugarEntrega'] : null,
+            'duracion'         => ($post['duracion'] ?? '') !== '' ? (int) $post['duracion'] : null,
+            'fechaInicio'      => $post['fechaInicio'],
+            'fechaFinal'       => $post['fechaFinal'],
+            'fechaEmision'     => $post['fechaEmision'],
+            'fechaExpiracion'  => $post['fechaExpiracion'],
+        ];
+
+        $cambios = [];
+        foreach ($nuevos as $campo => $valor) {
+            $anterior = $certificado->{$campo};
+            if ((string) $anterior !== (string) $valor) {
+                $cambios[$campo] = [$anterior, $valor];
+            }
+        }
+
+        if ($cambios) {
+            $this->db()->transStart();
+            $model->update($id, $nuevos);
+            foreach ($cambios as $campo => [$anterior, $valor]) {
+                $this->db()->table('tbl_certificado_historial')->insert([
+                    'idCertificado'    => $id,
+                    'accion'           => 'MODIFICACION',
+                    'campo_modificado' => $campo,
+                    'valor_anterior'   => $anterior,
+                    'valor_nuevo'      => $valor,
+                    'idUsuario'        => session()->get('idUser'),
+                ]);
+            }
+            $this->db()->transComplete();
+        }
+
+        return $this->response->setJSON(['ok' => true, 'cambios' => count($cambios), 'csrf' => csrf_hash()]);
     }
 
     public function pdf($id, string $modo = 'ver')

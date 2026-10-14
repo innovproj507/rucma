@@ -25,7 +25,7 @@ shell's default `php` has already been switched to 8.2:
   thing but picks up whatever `php` is in PATH; config is `phpunit.dist.xml`)
 - Run a single test: `<php8.2> vendor/bin/phpunit --filter testMethodName path/to/TestFile.php`
 - List routes: `spark routes`
-- Dev server: `spark serve` (app is normally served via Laragon vhost at `http://rucma2.test`, per `.env`)
+- Dev server: `spark serve` (app is normally served via Laragon vhost at `http://rucma.test`, per `app.baseURL` in `.env`; the local DB is `rucma2`)
 - Build Tailwind CSS once: `npm run build:css`
 - Watch Tailwind CSS during frontend work: `npm run watch:css`
   (source: `resources/css/input.css` → output: `public/css/tailwind.css`; views live under `app/Views`, which is the Tailwind `@source`)

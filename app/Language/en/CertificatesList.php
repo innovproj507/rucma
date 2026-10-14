@@ -33,4 +33,8 @@ return [
     'DeleteError'           => 'Could not delete the certificate.',
     'CertificateNotFound'   => 'Certificate not found.',
     'MustCancelBeforeDelete' => 'Only cancelled certificates can be deleted. Cancel it first.',
+    'EditAction'            => 'Edit certificate',
+    'EditNote'              => 'The code, course, category and student cannot be changed here (the code is what validates the printed QR). Student details are corrected in Students.',
+    'CertificateUpdated'    => 'The certificate was updated successfully.',
+    'UpdateError'           => 'Could not update the certificate.',
 ];

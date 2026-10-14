@@ -78,6 +78,9 @@ window.I18N = {
     certificateDeleted: <?= json_encode(lang('CertificatesList.CertificateDeleted')) ?>,
     cancelError: <?= json_encode(lang('CertificatesList.CancelError')) ?>,
     deleteError: <?= json_encode(lang('CertificatesList.DeleteError')) ?>,
+    editAction: <?= json_encode(lang('CertificatesList.EditAction')) ?>,
+    certificateUpdated: <?= json_encode(lang('CertificatesList.CertificateUpdated')) ?>,
+    updateError: <?= json_encode(lang('CertificatesList.UpdateError')) ?>,
   },
   certificadoForm: {
     existingStudentFound: <?= json_encode(lang('CertificadoForm.ExistingStudentFound')) ?>,
