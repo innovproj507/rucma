@@ -11,6 +11,7 @@ return [
     'ElDocumento'    => 'Documento / Pasaporte',
     'ElCompleto'     => 'Frase "has completed..."',
     'ElCurso'        => 'Nombre del curso',
+    'ElImoModelo'    => 'Número de Curso Modelo OMI',
     'ElSubtitulo'    => 'Subtítulo del curso (nivel STCW)',
     'ElLegal'        => 'Texto legal / regulación',
     'ElDetalle'      => 'Fechas / Método / Lugar / Duración',

@@ -33,6 +33,7 @@ $esAssessment = in_array($plantilla->tipoDetalle ?? 'india', \App\Models\Plantil
   .nombre { font-size: 20pt; font-weight: bold; color: #111; text-transform: uppercase; margin: 0; text-align: center; }
   .documento { font-size: 9pt; color: #444; margin: 0; text-align: center; }
   .curso { font-size: 14pt; font-weight: bold; color: #111; margin: 0; text-align: center; }
+  .imo-modelo { font-size: 9pt; color: #333; margin: 0; text-align: center; }
   .encabezado { font-size: 9pt; text-align: center; line-height: 1.4; }
   .legal, .resolucion { font-size: 8.5pt; color: #333; text-align: center; line-height: 1.4; }
   .codigo { font-size: 9pt; color: #333; }
@@ -77,6 +78,11 @@ $esAssessment = in_array($plantilla->tipoDetalle ?? 'india', \App\Models\Plantil
 
 <?php $p = $mm($layout['curso']); ?>
 <div class="el curso" style="top:<?= $p['top'] ?>mm; left:<?= $p['left'] ?>mm; width:<?= $p['width'] ?>mm; <?= $fs('curso') ?>"><?= esc($certificado->nombreCursoIngesEmitido ?: $certificado->nombreCursoEmitido) ?></div>
+
+<?php $imoModelo = \App\Models\PlantillaModel::formatoImoModelo($certificado->imoEmitido ?? null); ?>
+<?php if ($imoModelo) { $p = $mm($layout['imoModelo']); ?>
+<div class="el imo-modelo" style="top:<?= $p['top'] ?>mm; left:<?= $p['left'] ?>mm; width:<?= $p['width'] ?>mm; <?= $fs('imoModelo') ?>"><?= esc($imoModelo) ?></div>
+<?php } ?>
 
 <?php if (!empty($certificado->nivelSTCWEmitido)) { $p = $mm($layout['subtitulo']); ?>
 <div class="el subtitulo" style="top:<?= $p['top'] ?>mm; left:<?= $p['left'] ?>mm; width:<?= $p['width'] ?>mm; <?= $fs('subtitulo') ?>"><?= esc($certificado->nivelSTCWEmitido) ?></div>

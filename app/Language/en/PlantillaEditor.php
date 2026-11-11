@@ -12,6 +12,7 @@ return [
     'ElDocumento'    => 'Document / Passport',
     'ElCompleto'     => 'Phrase "has completed..."',
     'ElCurso'        => 'Course name',
+    'ElImoModelo'    => 'IMO Model Course number',
     'ElSubtitulo'    => 'Course subtitle (STCW level)',
     'ElLegal'        => 'Legal text / regulation',
     'ElDetalle'      => 'Dates / Method / Place / Duration',

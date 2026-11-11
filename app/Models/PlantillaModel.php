@@ -59,6 +59,7 @@ class PlantillaModel extends Model
         'documento'  => ['x' => 8,  'y' => 30, 'w' => 84, 'size' => 9],
         'completo'   => ['x' => 8,  'y' => 32.5, 'w' => 84, 'size' => 9.5],
         'curso'      => ['x' => 8,  'y' => 35, 'w' => 84, 'size' => 14],
+        'imoModelo'  => ['x' => 8,  'y' => 39, 'w' => 84, 'size' => 9],
         'subtitulo'  => ['x' => 8,  'y' => 44, 'w' => 84, 'size' => 10],
         'legal'      => ['x' => 10, 'y' => 47, 'w' => 80, 'size' => 8.5],
         'detalle'    => ['x' => 10, 'y' => 62, 'w' => 80, 'size' => 9.5],
@@ -73,7 +74,7 @@ class PlantillaModel extends Model
     // Elementos de texto a los que se les puede cambiar el tamaño de letra
     // desde el editor (los de imagen -- logos, firma, QR -- no aplican).
     public const ELEMENTOS_CON_TAMANO = [
-        'encabezado', 'titulo', 'codigo', 'certifica', 'nombre', 'documento', 'completo', 'curso', 'subtitulo', 'legal', 'detalle', 'resolucion', 'firmaTexto', 'firmaTexto2',
+        'encabezado', 'titulo', 'codigo', 'certifica', 'nombre', 'documento', 'completo', 'curso', 'imoModelo', 'subtitulo', 'legal', 'detalle', 'resolucion', 'firmaTexto', 'firmaTexto2',
     ];
 
     // Etiquetas de los elementos del lienzo/dropdown del editor -- metodo (no
@@ -92,6 +93,7 @@ class PlantillaModel extends Model
             'documento'  => lang('PlantillaEditor.ElDocumento'),
             'completo'   => lang('PlantillaEditor.ElCompleto'),
             'curso'      => lang('PlantillaEditor.ElCurso'),
+            'imoModelo'  => lang('PlantillaEditor.ElImoModelo'),
             'subtitulo'  => lang('PlantillaEditor.ElSubtitulo'),
             'legal'      => lang('PlantillaEditor.ElLegal'),
             'detalle'    => lang('PlantillaEditor.ElDetalle'),
@@ -142,6 +144,21 @@ class PlantillaModel extends Model
         }
 
         return array_replace_recursive(self::LAYOUT_DEFAULT, $guardado);
+    }
+
+    // Texto "(IMO Model Course X.XX)" que va debajo del nombre del curso --
+    // null si el curso no tiene numero IMO asignado (no todos lo tienen).
+    // Recorta los ceros de mas que deja el campo decimal(20,6) de tbl_cursos
+    // (1.210000 -> "1.21").
+    public static function formatoImoModelo($imo): ?string
+    {
+        if ($imo === null || $imo === '') {
+            return null;
+        }
+
+        $numero = rtrim(rtrim(number_format((float) $imo, 2, '.', ''), '0'), '.');
+
+        return '(IMO Model Course ' . $numero . ')';
     }
 
     public function porOficina(int $idOficina)

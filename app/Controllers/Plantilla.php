@@ -77,6 +77,7 @@ class Plantilla extends BaseController
             'documento'  => ($plantilla->textoDocumento ?: $textos['documento']) . ' ' . $muestra->dni,
             'completo'   => $plantilla->textoCompleto ?: $textos['completo'],
             'curso'      => $muestra->nombreCursoIngesEmitido,
+            'imoModelo'  => PlantillaModel::formatoImoModelo($muestra->imoEmitido),
             // El nivel STCW es del curso (ver Cursos), no de la plantilla --
             // se muestra un dato de ejemplo aqui igual que "curso"/"legal".
             'subtitulo'  => $muestra->nivelSTCWEmitido . ' (dato real: del curso, no de la plantilla)',
@@ -110,6 +111,7 @@ class Plantilla extends BaseController
             'nombreCursoEmitido'      => 'Curso de Ejemplo',
             'nombreCursoIngesEmitido' => 'Sample Training Course',
             'nivelSTCWEmitido'        => '(Sample STCW Level)',
+            'imoEmitido'              => '1.21',
             'reglasEmitidas'          => 'Regla de ejemplo, Párrafo 1, Sección A de la Convención Internacional.',
             'reglasIngesEmitidas'     => 'Sample Regulation, Paragraph 1, Section A of the International Convention.',
             'categoriaEmitida'        => 'New',

@@ -10,7 +10,7 @@ class CertificadoModel extends Model
     protected $useTimestamps = true;
     protected $allowedFields = [
         'idEstudiante', 'idOficina', 'idCurso', 'idModalidad', 'idCategoria', 'idUsuarioEmisor',
-        'nombreCursoEmitido', 'nombreCursoIngesEmitido', 'nivelSTCWEmitido', 'reglasEmitidas', 'reglasIngesEmitidas',
+        'nombreCursoEmitido', 'nombreCursoIngesEmitido', 'nivelSTCWEmitido', 'imoEmitido', 'reglasEmitidas', 'reglasIngesEmitidas',
         'horasEmitidas', 'modalidadEmitida', 'categoriaEmitida',
         'lugarEntrega', 'duracion', 'fechaInicio', 'fechaFinal', 'fechaEmision', 'fechaExpiracion',
         'codigo', 'code', 'hashcode', 'estado',
@@ -193,6 +193,7 @@ class CertificadoModel extends Model
             'nombreCursoEmitido'      => $curso->nombre,
             'nombreCursoIngesEmitido' => $curso->nombreIngles,
             'nivelSTCWEmitido'        => $curso->nivelSTCW,
+            'imoEmitido'              => $curso->imo,
             'reglasEmitidas'          => $curso->reglas,
             'reglasIngesEmitidas'     => $curso->reglasIngles,
             'horasEmitidas'           => $datos['horas'] ?? null,

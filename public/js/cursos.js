@@ -142,7 +142,9 @@ function editarCurso(id) {
       document.getElementById('nivelSTCW').value = c.nivelSTCW ?? '';
       document.getElementById('reglas').value = c.reglas ?? '';
       document.getElementById('reglasIngles').value = c.reglasIngles ?? '';
-      document.getElementById('imo').value = c.imo ?? '';
+      // El valor en BD es DECIMAL(20,6) (ej. "6.100000"); se muestra recortado
+      // (ej. "6.1"), igual que se formatea en el certificado.
+      document.getElementById('imo').value = c.imo ? String(parseFloat(c.imo)) : '';
       document.getElementById('estado').value = c.estado ?? 'A';
       if (document.getElementById('idOficinaCurso')) document.getElementById('idOficinaCurso').value = c.idOficina ?? '';
 
