@@ -148,15 +148,15 @@ class PlantillaModel extends Model
 
     // Texto "(IMO Model Course X.XX)" que va debajo del nombre del curso --
     // null si el curso no tiene numero IMO asignado (no todos lo tienen).
-    // Recorta los ceros de mas que deja el campo decimal(20,6) de tbl_cursos
-    // (1.210000 -> "1.21").
+    // Siempre a 2 decimales, sin recortar ceros (1.210000 -> "1.21",
+    // 1.200000 -> "1.20", 6.100000 -> "6.10").
     public static function formatoImoModelo($imo): ?string
     {
         if ($imo === null || $imo === '') {
             return null;
         }
 
-        $numero = rtrim(rtrim(number_format((float) $imo, 2, '.', ''), '0'), '.');
+        $numero = number_format((float) $imo, 2, '.', '');
 
         return '(IMO Model Course ' . $numero . ')';
     }
