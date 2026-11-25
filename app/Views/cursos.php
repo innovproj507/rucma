@@ -228,7 +228,7 @@
               <?php foreach ($categorias as $cat) { ?>
               <div>
                 <label class="mb-1 block text-xs text-gray-600"><?= esc($cat->descripcion) ?></label>
-                <input type="number" step="0.5" min="0" name="horas[<?= (int) $cat->idCategoria ?>]" id="horas_<?= (int) $cat->idCategoria ?>"
+                <input type="number" step="0.1" min="0" name="horas[<?= (int) $cat->idCategoria ?>]" id="horas_<?= (int) $cat->idCategoria ?>"
                        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
               </div>
               <?php } ?>

@@ -312,7 +312,7 @@ class Certificado extends BaseController
             'idModalidad'      => (int) $post['idModalidad'],
             'modalidadEmitida' => $modalidad->descripcion,
             'lugarEntrega'     => ($post['lugarEntrega'] ?? '') !== '' ? $post['lugarEntrega'] : null,
-            'duracion'         => ($post['duracion'] ?? '') !== '' ? (int) $post['duracion'] : null,
+            'duracion'         => ($post['duracion'] ?? '') !== '' ? (float) $post['duracion'] : null,
             'fechaInicio'      => $post['fechaInicio'],
             'fechaFinal'       => $post['fechaFinal'],
             'fechaEmision'     => $post['fechaEmision'],

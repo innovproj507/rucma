@@ -157,7 +157,7 @@
             </div>
             <div>
               <label class="mb-1 block text-sm font-medium text-gray-700"><?= lang('CertificadoForm.DurationHours') ?></label>
-              <input type="number" min="0" step="1" id="editDuracion" name="duracion" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+              <input type="number" min="0" step="0.1" id="editDuracion" name="duracion" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
             </div>
           </div>
 
